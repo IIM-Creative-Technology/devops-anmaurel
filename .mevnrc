@@ -1,0 +1,8 @@
+{
+  "name": "devops_amaurel_project",
+  "template": "Default",
+  "isConfigured": {
+    "client": false,
+    "server": false
+  }
+}
