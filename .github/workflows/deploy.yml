@@ -10,24 +10,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    # strategy:
-    #   matrix:
-    #     node-version: [12.x]
-
     steps:
       - name: Init project
         uses: actions/checkout@v2
 
-      # - name: Init nodejs
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: ${{ matrix.node-version }}
-
-      # - name: Installing project dependencies
-      #   run: npm install
-      
-      # - name: Building the project
-      #   run: npm run build
+      - name: Lauch container
+        run: docker-compose up -d
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.5.7
@@ -35,5 +23,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
-          # buildpack: "https://github.com/heroku/heroku-buildpack-nodejs.git"
-          # procfile: "web: heroku-nodejs dist/"
+          appdir: "./client"
+          usedocker: true
