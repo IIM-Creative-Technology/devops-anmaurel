@@ -14,28 +14,13 @@ jobs:
       - name: Init project
         uses: actions/checkout@v2
       
-      - name: Add remote origin
-        run: git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP }}.git
-
-      - name: Deploy backend to heroku
-        run: git push --force heroku `git subtree split --prefix server HEAD`:master
-
-      # - name:  Build, push & deploy to heroku
-      #   id: heroku
-      #   uses: snithyanantham/docker-compose-multiple-apps-heroku-deploy@v1.0
-      #   with:
-      #     email: ${{secrets.HEROKU_EMAIL}}
-      #     api_key: ${{secrets.HEROKU_API_KEY}}
-      #     docker_compose_file: './docker-compose.yml'
-      #     heroku_apps: '[{"imagename":"node:12.16.0-buster","appname":"${{secrets.HEROKU_APP}}","apptype":"web"},{"imagename":"node:12.16.0-buster","appname":"${{secrets.HEROKU_APP}}","apptype":"web"}]'
-
-      # - name: Lauch container
-      #   run: docker-compose up -d
-
-      # - name: Deploy to Heroku
-      #   uses: akhileshns/heroku-deploy@v3.5.6
-      #   with:
-      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-      #     heroku_app_name: ${{secrets.HEROKU_APP}}
-      #     heroku_email: ${{secrets.HEROKU_EMAIL}}
-      #     appdir: "./client"
+      - name: Deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ../iim_devops
+            git clone https://github.com/IIM-Creative-Technology/devops-anmaurel.git
