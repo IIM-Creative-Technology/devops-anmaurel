@@ -1,20 +1,42 @@
-name: Deploy app
+name: Test and deploy app
 
 on:
   push:
-    branches:
-      - develop
+    branches: [develop]
 
 jobs:
-  deploy:
+  tests:
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    
+    runs-on: ${{ matrix.platform }}
 
+    steps:
+      - name: Init
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install and test
+        run: |
+          npm install
+          npm run build
+          npm run test
+        env:
+          CI: true
+
+  deploy:
+    needs: [tests]
+    
     runs-on: ubuntu-latest
 
     steps:
-      - name: Init project
-        uses: actions/checkout@v2
-      
-      - name: Deploy app
+      - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.SSH_HOST}}
@@ -22,5 +44,5 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ../
-            git clone https://github.com/IIM-Creative-Technology/devops-anmaurel.git
+            cd ~/sites/iim/anmaurel_devops
+            git pull origin master
