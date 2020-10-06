@@ -45,7 +45,13 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd sites/iim
-            git clone https://github.com/IIM-Creative-Technology/devops-anmaurel.git
+            if [ ! -d "devops-anmaurel"]
+            then
+              git clone https://github.com/IIM-Creative-Technology/devops-anmaurel.git
+            else
+              git pull origin master
+            fi
             cd devops-anmaurel
             npm install
             npm run build
+            npm start
