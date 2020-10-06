@@ -2,7 +2,7 @@ name: Test and deploy app
 
 on:
   push:
-    branches: [develop]
+    branches: [master]
 
 jobs:
 
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install and test
+      - name: Install & build
         run: |
           npm install
           npm run build
@@ -46,3 +46,6 @@ jobs:
           script: |
             cd sites/iim
             git clone https://github.com/IIM-Creative-Technology/devops-anmaurel.git
+            cd devops-anmaurel
+            npm install
+            npm run build
