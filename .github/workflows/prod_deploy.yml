@@ -57,7 +57,7 @@ jobs:
             cd sites/iim/devops-anmaurel
             git pull --all
             git checkout master
-            git merge deploy
+            git merge origin/deploy
             git branch -d deploy
             git push origin :deploy
   
