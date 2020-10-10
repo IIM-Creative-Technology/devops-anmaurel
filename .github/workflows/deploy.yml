@@ -29,16 +29,6 @@ jobs:
           npm run build
         env:
           CI: true
-      
-      - name: Send SMS for successful test
-        uses: nexmo-community/nexmo-sms-action@master
-        env:
-          NEXMO_API_KEY: ${{ secrets.NEXMO_API_KEY }}
-          NEXMO_API_SECRET: ${{ secrets.NEXMO_API_SECRET }}
-        with:
-          nexmoNumber: ${{ secrets.NEXMO_NUMBER }}
-          recipientNumber: 33608130305
-          message: "Successful test on ${{ github.repository }} from ${{ github.actor }}"
 
   deploy:
     needs: [tests]
@@ -54,11 +44,32 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd sites/iim
-            if [ ! -d "devops-anmaurel"]
-            then
-              git clone https://github.com/IIM-Creative-Technology/devops-anmaurel.git
-            else
-              git pull origin master
-            fi
-            cd devops-anmaurel
+            cd sites/iim/devops-anmaurel
+            git pull origin master
+  
+  feedback:
+    needs: [deploy]
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send SMS for successful deploy
+        uses: nexmo-community/nexmo-sms-action@master
+        env:
+          NEXMO_API_KEY: ${{ secrets.NEXMO_API_KEY }}
+          NEXMO_API_SECRET: ${{ secrets.NEXMO_API_SECRET }}
+        with:
+          nexmoNumber: ${{ secrets.NEXMO_NUMBER }}
+          recipientNumber: 33608130305
+          message: "Successful deploy on ${{ github.repository }} from ${{ github.actor }}"
+
+      - name: Screenshot Website
+        uses: swinton/screenshot-website@v1.x
+        with:
+          source: http://antoine-maurel.com/
+          destination: screenshot-${{ matrix.os }}.png
+          full-page: true
