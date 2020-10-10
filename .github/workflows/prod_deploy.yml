@@ -84,6 +84,6 @@ jobs:
       - name: Screenshot Website
         uses: swinton/screenshot-website@v1.x
         with:
-          source: http://antoine-maurel.com/
+          source: http://iim.antoine-maurel.com/
           destination: screenshot-${{ matrix.os }}.png
           full-page: true
