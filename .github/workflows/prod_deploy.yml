@@ -37,7 +37,7 @@ jobs:
           git checkout -b deploy
           git add -f dist/
           git add -f node_modules/
-          git commit -m "Build dependencies because server don't support nodejs"
+          git commit -m "Build dependencies now because server don't support nodejs"
           git push -f origin deploy
 
   deploy:
@@ -67,6 +67,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        width: [1200, 600]
 
     runs-on: ubuntu-latest
 
@@ -85,5 +86,5 @@ jobs:
         uses: swinton/screenshot-website@v1.x
         with:
           source: http://iim.antoine-maurel.com/
-          destination: screenshot-${{ matrix.os }}.png
-          full-page: true
+          destination: screenshot-${{ matrix.os }}-${{ matrix.width }}.png
+          width: ${{ matrix.width }}
