@@ -52,6 +52,3 @@ jobs:
               git pull origin master
             fi
             cd devops-anmaurel
-            npm install
-            npm run build
-            npm start
