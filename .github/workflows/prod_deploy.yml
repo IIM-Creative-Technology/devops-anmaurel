@@ -32,6 +32,8 @@ jobs:
 
       - name: Commit built files
         run: |
+          git config --local user.email "antoinemaurel6@gmail.com"
+          git config --local user.name "anmaurel"
           git checkout -b deploy
           git add -f dist/
           git add -f node_modules/
