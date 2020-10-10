@@ -30,6 +30,14 @@ jobs:
         env:
           CI: true
 
+      - name: Commit built files
+        run: |
+          git checkout -b deploy
+          git add -f dist/
+          git add -f node_modules/
+          git commit -m "Build dependencies because server don't support nodejs"
+          git push -f origin deploy
+
   deploy:
     needs: [tests]
 
@@ -46,9 +54,6 @@ jobs:
           script: |
             cd sites/iim/devops-anmaurel
             git pull origin master
-            npm install
-            npm run build
-            node server.js
   
   feedback:
     needs: [deploy]
