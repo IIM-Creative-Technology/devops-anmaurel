@@ -34,7 +34,7 @@ jobs:
         run: |
           git config --local user.email "antoinemaurel6@gmail.com"
           git config --local user.name "anmaurel"
-          git checkout -b deploy
+          git checkout -B deploy
           git add -f dist/
           git add -f node_modules/
           git commit -m "Build dependencies because server don't support nodejs"
@@ -55,7 +55,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd sites/iim/devops-anmaurel
-            git pull origin master
+            git checkout deploy
+            git pull
   
   feedback:
     needs: [deploy]
