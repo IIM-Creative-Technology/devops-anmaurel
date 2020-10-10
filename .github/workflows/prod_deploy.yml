@@ -1,4 +1,4 @@
-name: Test and deploy app
+name: Test and deploy on production server
 
 on:
   push:
@@ -46,6 +46,9 @@ jobs:
           script: |
             cd sites/iim/devops-anmaurel
             git pull origin master
+            npm install
+            npm run build
+            node server.js
   
   feedback:
     needs: [deploy]
