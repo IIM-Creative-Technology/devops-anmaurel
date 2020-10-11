@@ -9,7 +9,7 @@ jobs:
   pre-deploy:
     strategy:
       matrix:
-        node-version: [12.x, 13.x]
+        node-version: [12.x]
         os: [ubuntu-latest]
     
     runs-on: ${{ matrix.os }}
@@ -29,6 +29,16 @@ jobs:
           npm run build
         env:
           CI: true
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
+          eslint: true
+          prettier: true
+          auto_fix: true
+          git_name: ${{ github.actor }}
+          commit_name: "Fix code style before push preprod with ${linter}"
 
       - name: Test
         run: |
