@@ -29,19 +29,10 @@ jobs:
           npm run build
         env:
           CI: true
-
-      - name: Run linters
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ secrets.GIT_TOKEN }}
-          eslint: true
-          prettier: true
-          auto_fix: true
-          git_name: ${{ github.actor }}
-          commit_name: "Fix code style before push prod with ${linter}"
       
-      - name: Test
+      - name: Lint & test
         run: |
+          npm run lint
           npm run test
       
       - name: Commit depedencies & built files
