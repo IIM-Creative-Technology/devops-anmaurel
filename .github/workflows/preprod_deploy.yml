@@ -1,8 +1,8 @@
-name: Test and deploy on production server
+name: Test and deploy on pre-production server
 
 on:
   push:
-    branches: [master]
+    branches: [preprod]
 
 jobs:
 
@@ -30,16 +30,6 @@ jobs:
         env:
           CI: true
 
-      - name: Run linters
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ secrets.GIT_TOKEN }}
-          eslint: true
-          prettier: true
-          auto_fix: true
-          git_name: ${{ github.actor }}
-          commit_name: "Fix code style before push prod with ${linter}"
-      
       - name: Test
         run: |
           npm run test
@@ -70,43 +60,20 @@ jobs:
           script: |
             cd sites/iim/devops-anmaurel
             git pull --all
-            git checkout master
+            git checkout preprod
             git merge origin/deploy
             git branch -d deploy
             git push origin :deploy
-  
+
   feedback:
     needs: [deploy]
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        width: [1200, 600]
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Screenshot website to have a quick overview 
-        uses: swinton/screenshot-website@v1.x
-        with:
-          source: http://iim.antoine-maurel.com/
-          destination: screenshot-${{ matrix.os }}-${{ matrix.width }}.png
-          width: ${{ matrix.width }}
-          full-page: true
-
-      - name: Send Discord notification for successful deploy on prod
+      - name: Send Discord notification for successful deploy on preprod
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_PROD }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_PREPROD }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed on production server'
-
-      - name: Send SMS for successful deploy on prod
-        uses: nexmo-community/nexmo-sms-action@master
-        env:
-          NEXMO_API_KEY: ${{ secrets.NEXMO_API_KEY }}
-          NEXMO_API_SECRET: ${{ secrets.NEXMO_API_SECRET }}
-        with:
-          nexmoNumber: ${{ secrets.NEXMO_NUMBER }}
-          recipientNumber: 33608130305
-          message: "Successful deploy on ${{ github.repository }} from ${{ github.actor }}"
+          args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed on pre-production server'
