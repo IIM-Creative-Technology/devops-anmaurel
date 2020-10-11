@@ -1,26 +1,21 @@
-name: Push changes on pull-request
+name: Send notification on pull-request
 
 on: pull_request
 
 jobs: 
 
   pr:
-    if: github.event.pull_request.head.repo.full_name == github.repository
-
     runs-on: ubuntu-latest
 
     steps:
       - name: Init
         uses: actions/checkout@v2
 
-      - name: Push changes
-        if: steps.git-check.outputs.modified == 'true'
-        run: |
-          git config --local user.email "antoinemaurel6@gmail.com"
-          git config --local user.name "anmaurel"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add .
-          git commit -m "PR changes"
-          git push
+      - name: Send Discord notification for new pull-request
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_PREPROD }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Nouvelle pull-request sur le repo {{ github.event.pull_request.head.repo.full_name }} par {{ github.event.pull_request.user.login }} | message: {{ github.event.pull_request.body }}'
 
       
