@@ -7,9 +7,11 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --fix",
     "start": "node server.js",
-    "test": "jest --verbose"
+    "test": "jest"
   },
   "dependencies": {
+    "@vue/cli-plugin-unit-jest": "^4.5.7",
+    "@vue/test-utils": "^1.1.0",
     "axios": "^0.19.2",
     "buefy": "^0.8.10",
     "core-js": "^3.4.4",
