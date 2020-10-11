@@ -1,8 +1,6 @@
 name: Send notification on pull-request
 
-on:
-  pull_request:
-    branches: [develop]
+on: [pull_request]
 
 jobs: 
 
