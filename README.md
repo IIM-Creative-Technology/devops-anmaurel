@@ -15,7 +15,7 @@ CRUD de films avec barre de recherche, réalisé avec Vuejs et Buefy (Bulma).
 ## Explication CI/CD Github Actions
 Preprod et prod hébergés sur un serveur mutualisé 1&1. Nodejs non installé sur le serveur et impossible de l'installer étant donné que le serveur est mutualisé. Pour palier à ça, à chaque push sur preprod ou prod, une branche temporaire est créée comprenant le résultat de l'installation des dépendances (node_modules/) et le résultat du build (dist/). Branche qui est ensuite push sur le serveur 1&1 et supprimée juste après, voir explication ci-dessous du fichier de config Github Actions.
 
-Au niveau du workflow Github Actions, il y a 2 fichiers, un pour le deploiement sur le serveur de preprod et l'autre pour le deploiement sur le seveur de prod. Les 2 fichiers comportent tout les deux 3 jobs. Le premier job __'pre-deploy'__ à l'intérieur duquel on retrouve :
+Au niveau du workflow Github Actions, il y a 3 fichiers, un pour le deploiement sur le serveur de preprod, l'autre pour le deploiement sur le seveur de prod et le dernier concernant les pull-request. Les 2 fichiers de deploiement comportent tout les deux 3 jobs. Le premier job __'pre-deploy'__ à l'intérieur duquel on retrouve :
 
 * L'initialisation du repo Github.  
     `uses: actions/checkout@v2`
@@ -47,3 +47,6 @@ Le dernier job __'feedback'__ qui s'éxécute une fois le job deploy effectué e
 
 * (prod only) L'envoi d'un sms lorsque le déploiement c'est effectué sans échec.  
     `uses: nexmo-community/nexmo-sms-action@master`
+
+
+Le fichier de pull-request comporte quand à lui un job qui envoi une notification sur le channel discord réservé au pull-request à chaque nouveau pull-request.
