@@ -59,7 +59,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd sites/iim/devops-anmaurel
+            cd sites/iim/devops-preprod-anmaurel/devops-anmaurel
             git pull --all
             git checkout preprod
             git merge origin/deploy
